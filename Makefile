@@ -23,3 +23,8 @@ pre-commit: render ## Test the Helm chart with pre-commit
 unittest: ## Run unittests on the Helm chart
 	@echo "Running unit tests on helm chart..."
 	cd charts/splunk-synthetics-runner && helm unittest --strict -f "../../tests/unittests/*.yaml" . || exit 1
+
+.PHONY: docs
+docs: ## Run unittests on the Helm chart
+	@echo "Update docs for helm chart..."
+	cd charts/splunk-synthetics-runner && helm-docs || exit 1
