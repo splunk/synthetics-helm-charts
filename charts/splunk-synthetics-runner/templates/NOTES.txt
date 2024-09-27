@@ -1,0 +1,7 @@
+Check the status of Splunk Synthetic Private Location deployment by running this comamnd:
+
+kubectl get deployments --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "splunk-synthetics-runner.fullname" . }},app.kubernetes.io/instance={{ .Release.Name }}"
+
+List the Runner Pods with the following command:
+
+kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "splunk-synthetics-runner.fullname" . }},app.kubernetes.io/instance={{ .Release.Name }}"

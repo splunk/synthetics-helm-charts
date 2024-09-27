@@ -1,0 +1,10 @@
+{{- if .Values.synthetics.additionalCaCerts }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "splunk-synthetics-runner.fullname" . }}
+  labels:
+    {{- include "splunk-synthetics-runner.labels" . | nindent 4 }}
+data:
+  {{- .Values.synthetics.additionalCaCerts | toYaml | nindent 2 }}
+{{- end }}
