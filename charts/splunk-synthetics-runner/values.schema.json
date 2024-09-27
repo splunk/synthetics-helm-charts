@@ -1,0 +1,703 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        "replicaCount",
+        "image",
+        "imagePullSecrets",
+        "nameOverride",
+        "fullnameOverride",
+        "commonLabels",
+        "podAnnotations",
+        "podLabels",
+        "podSecurityContext",
+        "containerSecurityContext",
+        "updateStrategy",
+        "synthetics",
+        "resources",
+        "livenessProbe",
+        "automountServiceAccountToken",
+        "serviceAccount",
+        "autoscaling",
+        "terminationGracePeriodSeconds",
+        "env",
+        "volumes",
+        "volumeMounts",
+        "nodeSelector",
+        "tolerations",
+        "affinity",
+        "priorityClassName",
+        "dnsPolicy",
+        "dnsConfig",
+        "hostAliases",
+        "podDisruptionBudget"
+    ],
+    "properties": {
+        "replicaCount": {
+            "type": "integer",
+            "default": 0,
+            "title": "The replicaCount Schema",
+            "examples": [
+                1
+            ]
+        },
+        "image": {
+            "type": "object",
+            "default": {},
+            "title": "The image Schema",
+            "required": [
+                "repository",
+                "pullPolicy",
+                "tag"
+            ],
+            "properties": {
+                "repository": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The repository Schema",
+                    "examples": [
+                        "quay.io/signalfx/splunk-synthetics-runner"
+                    ]
+                },
+                "pullPolicy": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The pullPolicy Schema",
+                    "examples": [
+                        "IfNotPresent"
+                    ]
+                },
+                "tag": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The tag Schema",
+                    "examples": [
+                        ""
+                    ]
+                }
+            },
+            "examples": [{
+                "repository": "quay.io/signalfx/splunk-synthetics-runner",
+                "pullPolicy": "IfNotPresent",
+                "tag": ""
+            }]
+        },
+        "imagePullSecrets": {
+            "type": "array",
+            "default": [],
+            "title": "The imagePullSecrets Schema",
+            "items": {},
+            "examples": [
+                []
+            ]
+        },
+        "nameOverride": {
+            "type": "string",
+            "default": "",
+            "title": "The nameOverride Schema",
+            "examples": [
+                ""
+            ]
+        },
+        "fullnameOverride": {
+            "type": "string",
+            "default": "",
+            "title": "The fullnameOverride Schema",
+            "examples": [
+                ""
+            ]
+        },
+        "commonLabels": {
+            "type": "object",
+            "default": {},
+            "title": "The commonLabels Schema",
+            "required": [],
+            "properties": {},
+            "examples": [{}]
+        },
+        "podAnnotations": {
+            "type": "object",
+            "default": {},
+            "title": "The podAnnotations Schema",
+            "required": [],
+            "properties": {},
+            "examples": [{}]
+        },
+        "podLabels": {
+            "type": "object",
+            "default": {},
+            "title": "The podLabels Schema",
+            "required": [],
+            "properties": {},
+            "examples": [{}]
+        },
+        "podSecurityContext": {
+            "type": "object",
+            "default": {},
+            "title": "The podSecurityContext Schema",
+            "required": [],
+            "properties": {},
+            "examples": [{}]
+        },
+        "containerSecurityContext": {
+            "type": "object",
+            "default": {},
+            "title": "The containerSecurityContext Schema",
+            "required": [],
+            "properties": {},
+            "examples": [{}]
+        },
+        "updateStrategy": {
+            "type": "object",
+            "default": {},
+            "title": "The updateStrategy Schema",
+            "required": [],
+            "properties": {},
+            "examples": [{
+                "type": "RollingUpdate",
+                "rollingUpdate": {
+                    "maxSurge": "25%",
+                    "maxUnavailable": "25%"
+                }
+            }]
+        },
+        "synthetics": {
+            "type": "object",
+            "default": {},
+            "title": "The synthetics Schema",
+            "required": [
+                "enableNetworkShaping",
+                "secret"
+            ],
+            "properties": {
+                "enableNetworkShaping": {
+                    "type": "boolean",
+                    "default": false,
+                    "title": "The enableNetworkShaping Schema",
+                    "examples": [
+                        true
+                    ]
+                },
+                "logLevel": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The logLevel Schema",
+                    "examples": [
+                        "info"
+                    ]
+                },
+                "additionalCaCerts": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The additionalCaCerts Schema",
+                    "examples": [
+                        {"example.com.cert": "-----BEGIN CERTIFICATE-----\nMIIBIjANBgkqAQ8AMIIBCgKCAQEAwJw..."}
+                    ]
+                },
+                "secret": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The secret Schema",
+                    "required": [
+                        "name",
+                        "create",
+                        "runnerToken"
+                    ],
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The name Schema",
+                            "examples": [
+                                ""
+                            ]
+                        },
+                        "create": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "The create Schema",
+                            "examples": [
+                                false
+                            ]
+                        },
+                        "runnerToken": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The runnerToken Schema",
+                            "examples": [
+                                ""
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "name": "",
+                        "create": false,
+                        "runnerToken": ""
+                    }]
+                }
+            },
+            "examples": [{
+                "enableNetworkShaping": true,
+                "logLevel": "info",
+                "additionalCaCerts": null,
+                "secret": {
+                    "name": "",
+                    "create": false,
+                    "runnerToken": ""
+                }
+            }]
+        },
+        "resources": {
+            "type": "object",
+            "default": {},
+            "title": "The resources Schema",
+            "required": [
+                "limits",
+                "requests"
+            ],
+            "properties": {
+                "limits": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The limits Schema",
+                    "required": [
+                        "cpu",
+                        "memory"
+                    ],
+                    "properties": {
+                        "cpu": {
+                            "type": "integer",
+                            "default": 0,
+                            "title": "The cpu Schema",
+                            "examples": [
+                                2
+                            ]
+                        },
+                        "memory": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The memory Schema",
+                            "examples": [
+                                "8G"
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "cpu": 2,
+                        "memory": "8G"
+                    }]
+                },
+                "requests": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The requests Schema",
+                    "required": [
+                        "cpu",
+                        "memory"
+                    ],
+                    "properties": {
+                        "cpu": {
+                            "type": "integer",
+                            "default": 0,
+                            "title": "The cpu Schema",
+                            "examples": [
+                                2
+                            ]
+                        },
+                        "memory": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The memory Schema",
+                            "examples": [
+                                "8G"
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "cpu": 2,
+                        "memory": "8G"
+                    }]
+                }
+            },
+            "examples": [{
+                "limits": {
+                    "cpu": 2,
+                    "memory": "8G"
+                },
+                "requests": {
+                    "cpu": 2,
+                    "memory": "8G"
+                }
+            }]
+        },
+        "livenessProbe": {
+            "type": "object",
+            "default": {},
+            "title": "The livenessProbe Schema",
+            "required": [
+                "enabled",
+                "initialDelaySeconds",
+                "periodSeconds",
+                "timeoutSeconds",
+                "successThreshold",
+                "failureThreshold"
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "title": "The enabled Schema",
+                    "examples": [
+                        true
+                    ]
+                },
+                "initialDelaySeconds": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "The initialDelaySeconds Schema",
+                    "examples": [
+                        60
+                    ]
+                },
+                "periodSeconds": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "The periodSeconds Schema",
+                    "examples": [
+                        300
+                    ]
+                },
+                "timeoutSeconds": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "The timeoutSeconds Schema",
+                    "examples": [
+                        10
+                    ]
+                },
+                "successThreshold": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "The successThreshold Schema",
+                    "examples": [
+                        1
+                    ]
+                },
+                "failureThreshold": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "The failureThreshold Schema",
+                    "examples": [
+                        3
+                    ]
+                }
+            },
+            "examples": [{
+                "enabled": true,
+                "initialDelaySeconds": 60,
+                "periodSeconds": 300,
+                "timeoutSeconds": 10,
+                "successThreshold": 1,
+                "failureThreshold": 3
+            }]
+        },
+        "automountServiceAccountToken": {
+            "type": "boolean",
+            "default": false,
+            "title": "The automountServiceAccountToken Schema",
+            "examples": [
+                true
+            ]
+        },
+        "serviceAccount": {
+            "type": "object",
+            "default": {},
+            "title": "The serviceAccount Schema",
+            "required": [
+                "create"
+            ],
+            "properties": {
+                "create": {
+                    "type": "boolean",
+                    "default": false,
+                    "title": "The create Schema",
+                    "examples": [
+                        true
+                    ]
+                },
+                "name": {
+                    "type": "string",
+                    "default": "",
+                    "title": "The name Schema",
+                    "examples": [
+                        ""
+                    ]
+                },
+                "annotations": {}
+            },
+            "examples": [{
+                "create": true,
+                "name": ""
+            }]
+        },
+        "autoscaling": {
+            "type": "object",
+            "default": {},
+            "title": "The autoscaling Schema",
+            "required": [
+                "enabled",
+                "minReplicas",
+                "maxReplicas",
+                "targetCPUUtilizationPercentage",
+                "targetMemoryUtilizationPercentage"
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "title": "The enabled Schema",
+                    "examples": [
+                        false
+                    ]
+                },
+                "minReplicas": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "The minReplicas Schema",
+                    "examples": [
+                        1
+                    ]
+                },
+                "maxReplicas": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "The maxReplicas Schema",
+                    "examples": [
+                        6
+                    ]
+                },
+                "targetCPUUtilizationPercentage": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "The targetCPUUtilizationPercentage Schema",
+                    "examples": [
+                        95
+                    ]
+                },
+                "targetMemoryUtilizationPercentage": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "The targetMemoryUtilizationPercentage Schema",
+                    "examples": [
+                        95
+                    ]
+                }
+            },
+            "examples": [{
+                "enabled": false,
+                "minReplicas": 1,
+                "maxReplicas": 6,
+                "targetCPUUtilizationPercentage": 95,
+                "targetMemoryUtilizationPercentage": 95
+            }]
+        },
+        "terminationGracePeriodSeconds": {
+            "type": "integer",
+            "default": 0,
+            "title": "The terminationGracePeriodSeconds Schema",
+            "examples": [
+                10
+            ]
+        },
+        "env": {
+            "type": "object",
+            "default": {},
+            "title": "The env Schema",
+            "required": [],
+            "properties": {},
+            "examples": [{}]
+        },
+        "volumes": {
+            "type": "array",
+            "default": [],
+            "title": "The volumes Schema",
+            "items": {},
+            "examples": [
+                []
+            ]
+        },
+        "volumeMounts": {
+            "type": "array",
+            "default": [],
+            "title": "The volumeMounts Schema",
+            "items": {},
+            "examples": [
+                []
+            ]
+        },
+        "nodeSelector": {
+            "type": "object",
+            "default": {},
+            "title": "The nodeSelector Schema",
+            "required": [],
+            "properties": {},
+            "examples": [{}]
+        },
+        "tolerations": {
+            "type": "array",
+            "default": [],
+            "title": "The tolerations Schema",
+            "items": {},
+            "examples": [
+                []
+            ]
+        },
+        "affinity": {
+            "type": "object",
+            "default": {},
+            "title": "The affinity Schema",
+            "required": [],
+            "properties": {},
+            "examples": [{}]
+        },
+        "priorityClassName": {
+            "type": "string",
+            "default": "",
+            "title": "The priorityClassName Schema",
+            "examples": [
+                ""
+            ]
+        },
+        "dnsPolicy": {
+            "type": "string",
+            "default": "",
+            "title": "The dnsPolicy Schema",
+            "examples": [
+                "ClusterFirst"
+            ]
+        },
+        "dnsConfig": {
+            "type": "object",
+            "default": {},
+            "title": "The dnsConfig Schema",
+            "required": [],
+            "properties": {},
+            "examples": [{}]
+        },
+        "hostAliases": {
+            "type": "array",
+            "default": [],
+            "title": "The hostAliases Schema",
+            "items": {},
+            "examples": [
+                []
+            ]
+        },
+        "podDisruptionBudget": {
+            "type": "object",
+            "default": {},
+            "title": "The podDisruptionBudget Schema",
+            "required": [
+                "enabled",
+                "minAvailable"
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "default": false,
+                    "title": "The enabled Schema",
+                    "examples": [
+                        true
+                    ]
+                },
+                "minAvailable": {
+                    "type": "integer",
+                    "default": 0,
+                    "title": "The minAvailable Schema",
+                    "examples": [
+                        1
+                    ]
+                }
+            },
+            "examples": [{
+                "enabled": true,
+                "minAvailable": 1
+            }]
+        }
+    },
+    "examples": [{
+        "replicaCount": 1,
+        "image": {
+            "repository": "quay.io/signalfx/splunk-synthetics-runner",
+            "pullPolicy": "IfNotPresent",
+            "tag": ""
+        },
+        "imagePullSecrets": [],
+        "nameOverride": "",
+        "fullnameOverride": "",
+        "commonLabels": {},
+        "podAnnotations": {},
+        "podLabels": {},
+        "podSecurityContext": {},
+        "containerSecurityContext": {},
+        "updateStrategy": {},
+        "synthetics": {
+            "enableNetworkShaping": true,
+            "logLevel": "info",
+            "additionalCaCerts": {},
+            "secret": {
+                "name": "",
+                "create": false,
+                "runnerToken": ""
+            }
+        },
+        "resources": {
+            "limits": {
+                "cpu": 2,
+                "memory": "8G"
+            },
+            "requests": {
+                "cpu": 2,
+                "memory": "8G"
+            }
+        },
+        "livenessProbe": {
+            "enabled": true,
+            "initialDelaySeconds": 60,
+            "periodSeconds": 300,
+            "timeoutSeconds": 10,
+            "successThreshold": 1,
+            "failureThreshold": 3
+        },
+        "automountServiceAccountToken": true,
+        "serviceAccount": {
+            "create": true,
+            "name": ""
+        },
+        "autoscaling": {
+            "enabled": false,
+            "minReplicas": 1,
+            "maxReplicas": 6,
+            "targetCPUUtilizationPercentage": 95,
+            "targetMemoryUtilizationPercentage": 95
+        },
+        "terminationGracePeriodSeconds": 10,
+        "env": {},
+        "volumes": [],
+        "volumeMounts": [],
+        "nodeSelector": {},
+        "tolerations": [],
+        "affinity": {},
+        "priorityClassName": "",
+        "dnsPolicy": "ClusterFirst",
+        "dnsConfig": {},
+        "hostAliases": [],
+        "podDisruptionBudget": {
+            "enabled": true,
+            "minAvailable": 1
+        }
+    }]
+}

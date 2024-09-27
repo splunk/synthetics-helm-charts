@@ -1,0 +1,59 @@
+name: CI Build Test
+
+on:
+  pull_request:
+    branches-ignore:
+      - gh-pages
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v4.2.0
+
+      - uses: actions/setup-python@v5.2.0
+        with:
+          python-version: '3.x'
+          check-latest: true
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.6.1
+
+      - name: Run chart-testing (list-changed)
+        id: list-changed
+        run: |
+          changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
+          if [[ -n "$changed" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Linting charts
+        run: helm lint charts/*
+
+      - name: Run chart-testing (lint)
+        if: steps.list-changed.outputs.changed == 'true'
+        run: ct lint --config=ct.yaml --target-branch ${{ github.event.repository.default_branch }}
+
+      - name: Run helm unit tests
+        run: |
+          helm plugin install https://github.com/helm-unittest/helm-unittest
+          make unittest
+
+      # - name: Create kind cluster
+      #   uses: helm/kind-action@v1.10.0
+      #   # Only build a kind cluster if there are chart changes to test.
+      #   if: steps.list-changed.outputs.changed == 'true'
+
+      # - name: Run chart-testing (install)
+      #   run: ct install --config=ct.yaml
+
+
+  # e2e-test: []

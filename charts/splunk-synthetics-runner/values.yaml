@@ -1,0 +1,175 @@
+# Default values for splunk-synthetics-runner.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Count of runner pods.
+replicaCount: 1
+
+# -- Configuration for container image for Splunk synthetics runner
+image:
+  repository: quay.io/signalfx/splunk-synthetics-runner
+  pullPolicy: IfNotPresent
+  # -- Override the image tag; default is the chart appVersion.
+  tag: ""
+
+# -- ImagePullSecrets to use for pulling the images in use.
+imagePullSecrets: []
+
+# -- Overrides app name
+nameOverride: ""
+
+# -- Overrides fully qualified app name
+fullnameOverride: ""
+
+# -- Additional labels which will be included on all objects and as selectors.
+commonLabels: {}
+
+# -- Additional annotations for runner pods.
+podAnnotations: {}
+
+# -- Additional labels for runner pods.
+podLabels: {}
+
+# -- Pod security context for runner pods.
+podSecurityContext: {}
+
+# -- Container security context for runner container.
+containerSecurityContext: {}
+
+# -- Configure update strategy for runner pods.
+updateStrategy: {}
+  # type: RollingUpdate
+  # rollingUpdate:
+  #   maxSurge: 25%
+  #   maxUnavailable: 25%
+
+# -- Splunk Synthetics Runner configurations
+synthetics:
+  # -- Enable netwrok shapping capabilities which allows runner to simulate
+  # different device's throughputs.
+  # Needs privilege escalation and CAP_NET_ADMIN.
+  enableNetworkShaping: true
+
+  # -- logLevel is to set log level of the Splunk Synthetics runner.
+  # Available values are: debug, info, warn, error
+  logLevel: info
+
+  # -- Add custom CA certs to use in API/HTTP tests. Requires privilege escalation.
+  additionalCaCerts: {}
+
+  # -- Private location token configuration.
+  # Rotating the runner token requires an explicit rollout/restart of the deployment.
+  secret:
+    # -- The name of the secret created by chart (if name is empty the default name is used)
+    # or the name of a secret that the user created.
+    # If secret is created outside of the helm chart, make sure the key for token
+    # is 'runner_token' in the secret. The chart references this key
+    # when passing token as env variable.
+    name: ""
+    # -- Option for creating a new secret or using an existing one.
+    # When true, a new kubernetes secret will be created by the chart that will
+    # contain value from runnerToken.
+    # When false, the user must set secret.name to the name of the k8s secret
+    # the user created with the runner's token.
+    create: false
+    # -- Used when sythentics.secret.create=true. The runner's token available
+    # in Splunk Observability when Private Location was created.
+    runnerToken: ""
+
+# -- Resources for runner container.
+resources:
+  # Recommended resources for runner.
+  limits:
+    cpu: 2
+    memory: 8G
+  requests:
+    cpu: 2
+    memory: 8G
+
+# Adjust the periodSeconds to be greater than frequency of tests configured
+# or the probe could result in restarts when runner has no jobs scheduled
+livenessProbe:
+  # -- Enable liveness probe
+  enabled: true
+  initialDelaySeconds: 60
+  periodSeconds: 300
+  timeoutSeconds: 10
+  successThreshold: 1
+  failureThreshold: 3
+
+# -- Indicates whether a service account token should be automatically mounted
+# to the runner pod.
+automountServiceAccountToken: true
+
+# -- ServiceAccount config. Note that the runner pod does not need access to
+# k8s api for its operation.
+serviceAccount:
+  # -- If true, service account will be created.
+  create: true
+  # -- The name of the service account to use. If not set, the release's fullname
+  # will be used when create is true. Set this variable to add user created
+  # service account to pod.
+  name: ""
+  # -- Annotations to add to service account
+  annotations: {}
+
+# -- Configuration for HPA
+autoscaling:
+  # -- Enable HPA
+  enabled: false
+  # -- Minimum replicas of runner
+  minReplicas: 1
+  # -- Maximum replicas of runner
+  maxReplicas: 6
+  # -- Target CPU utilization
+  targetCPUUtilizationPercentage: 95
+  # -- Target Memory utilization
+  targetMemoryUtilizationPercentage: 95
+
+# -- Duration in seconds the pod needs to terminate gracefully.
+terminationGracePeriodSeconds: 10
+
+# -- Additional environment variables as map.
+env: {}
+
+# -- Additional volumes to add to runner deployment.
+volumes: []
+  # - name: cache-volume
+  #   emptyDir:
+  #     sizeLimit: 500Mi
+
+# -- Additional volumeMounts to add to the runner deployment.
+volumeMounts: []
+  # - mountPath: /cache
+  #   name: cache-volume
+
+# -- Selector for the runner pods to fit on a node.
+nodeSelector: {}
+
+# -- Tolerations to attach to runner pods for node taints.
+tolerations: []
+
+# -- Inter-pod and node affinity/anti-affinity rules.
+affinity: {}
+
+# -- Priority class for runner pods
+priorityClassName: ""
+
+# -- DNS Policy to set for the runner pods. Valid values are
+# ClusterFirst, ClusterFirstWithHostNet, Default, None
+dnsPolicy: ClusterFirst
+
+# -- Specify additional DNS parameters for the runner pods.
+dnsConfig: {}
+
+# -- List of hosts/IPs to be injected into the pod's hosts file.
+hostAliases: []
+  # - ip: "1.2.3.4"
+  #   hostnames:
+  #   - "private.domain.com"
+
+# -- Pod distruption budget
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+  # maxUnavailable: 1

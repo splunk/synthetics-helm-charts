@@ -1,0 +1,18 @@
+## Splunk Synthetic Monitoring - Kubernetes Private Locations
+
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+Helm chart to deploy [private location runners](https://docs.splunk.com/observability/en/synthetics/test-config/private-locations.html) for [Splunk Synthetic Monitoring](https://www.splunk.com/en_us/products/synthetic-monitoring.html).
+
+### Installing the Chart
+
+To install the chart with the release name `my-splunk-synthetics-runner`:
+
+```console
+$ helm repo add <tbd> http://tbd.splunk.github.io
+$ helm install my-splunk-synthetics-runner foo-bar/{{ template "chart.name" . }}
+```
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}
