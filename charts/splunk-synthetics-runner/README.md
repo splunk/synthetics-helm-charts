@@ -9,8 +9,8 @@ Helm chart to deploy [private location runners](https://docs.splunk.com/observab
 To install the chart with the release name `my-splunk-synthetics-runner`:
 
 ```console
-$ helm repo add <tbd> http://tbd.splunk.github.io
-$ helm install my-splunk-synthetics-runner foo-bar/splunk-synthetics-runner
+$ helm repo add synthetics-helm-charts https://splunk.github.io/synthetics-helm-charts/
+$ helm install my-splunk-synthetics-runner release synthetics-helm-charts/splunk-synthetics-runner
 ```
 
 ## Values
