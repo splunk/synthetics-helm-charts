@@ -33,25 +33,31 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Linting charts
-        run: helm lint charts/*
-
       - name: Run chart-testing (lint)
         if: steps.list-changed.outputs.changed == 'true'
         run: ct lint --config=ct.yaml --target-branch ${{ github.event.repository.default_branch }}
+
+      - name: Run helm-docs
+        id: helm-docs
+        run: |
+          make docs
+          if [[ $(git diff --stat) != '' ]]; then
+            echo -e '\033[0;31mREADME outdated! Please run "make docs".\033[0m ❌'
+            git diff --color
+            exit 1
+          else
+            echo -e '\033[0;32mREADME is up-to-date\033[0m ✔'
+          fi
 
       - name: Run helm unit tests
         run: |
           helm plugin install https://github.com/helm-unittest/helm-unittest
           make unittest
 
+      - name: Run chart-testing (install)
+        run: ct install --config=ct.yaml
+
       # - name: Create kind cluster
       #   uses: helm/kind-action@v1.10.0
       #   # Only build a kind cluster if there are chart changes to test.
       #   if: steps.list-changed.outputs.changed == 'true'
-
-      # - name: Run chart-testing (install)
-      #   run: ct install --config=ct.yaml
-
-
-  # e2e-test: []

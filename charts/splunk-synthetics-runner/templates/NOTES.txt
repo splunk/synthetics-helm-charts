@@ -1,3 +1,14 @@
+{{/* Throws an error when the token is not provided. Not an exhaustive check of
+all the different ways a user could add an env variable to container,
+so might need to be removed later if requested by users.
+If none of the below checks pass, we throw an error -
+1. Check if token var has value and secret creation is enabled
+2. Check is a custom secret name is provided with in chart secret creation disabled
+3. Check if token is set as an env var directly */}}
+{{- if not (or (and .Values.synthetics.secret.create .Values.synthetics.secret.runnerToken) (and (not .Values.synthetics.secret.create) (or .Values.synthetics.secret.name (hasKey .Values.env  "RUNNER_TOKEN")))) }}
+{{ fail "[ERROR] Splunk Synthetic Private Location Runner requires token to be supplied in the environment variable RUNNER_TOKEN. Users can provide this as value to the variable synthetics.secret.runnerToken or supply the secret name which contains the token in the variable synthetics.secret.name" }}
+{{- end }}
+
 Check the status of Splunk Synthetic Private Location deployment by running this comamnd:
 
 kubectl get deployments --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "splunk-synthetics-runner.fullname" . }},app.kubernetes.io/instance={{ .Release.Name }}"

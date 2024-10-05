@@ -13,7 +13,16 @@ repos:
       exclude: ^charts/.*/templates/
       args: [ --allow-multiple-documents ]
     - id: check-added-large-files
-  - repo: https://github.com/gruntwork-io/pre-commit
-    rev: v0.1.23
+  - repo: https://github.com/norwoodj/helm-docs
+    rev: v1.14.2
+    hooks:
+      - id: helm-docs
+        args:
+          - --chart-search-root=charts
+  - repo: local
     hooks:
     - id: helmlint
+      name: Lint the helm chart
+      entry: make lint
+      files: "charts/*"
+      language: system

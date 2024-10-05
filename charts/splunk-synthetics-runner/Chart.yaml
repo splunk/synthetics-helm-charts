@@ -3,4 +3,11 @@ name: splunk-synthetics-runner
 description: Private location runners for Splunk Synthetic Monitoring
 type: application
 version: 0.0.1
-appVersion: "0.16.7"
+appVersion: "0.19.3"
+keywords:
+  - Splunk
+  - Observability
+  - Synthetic Monitoring
+  - Private Location
+maintainers:
+  - name: Splunk

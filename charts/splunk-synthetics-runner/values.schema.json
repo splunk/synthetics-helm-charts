@@ -21,7 +21,6 @@
         "livenessProbe",
         "automountServiceAccountToken",
         "serviceAccount",
-        "autoscaling",
         "terminationGracePeriodSeconds",
         "env",
         "volumes",
@@ -194,7 +193,7 @@
                     "default": {},
                     "title": "The additionalCaCerts Schema",
                     "examples": [
-                        {"example.com.cert": "-----BEGIN CERTIFICATE-----\nMIIBIjANBgkqAQ8AMIIBCgKCAQEAwJw..."}
+                        {"example.com.crt": "-----BEGIN CERTIFICATE-----\nMIIBIjANBgkqAQ8AMIIBCgKCAQEAwJw..."}
                     ]
                 },
                 "secret": {
@@ -254,26 +253,20 @@
             "type": "object",
             "default": {},
             "title": "The resources Schema",
-            "required": [
-                "limits",
-                "requests"
-            ],
             "properties": {
                 "limits": {
                     "type": "object",
                     "default": {},
                     "title": "The limits Schema",
-                    "required": [
-                        "cpu",
-                        "memory"
-                    ],
                     "properties": {
                         "cpu": {
-                            "type": "integer",
-                            "default": 0,
+                            "type": [
+                                "string",
+                                "integer"
+                              ],
                             "title": "The cpu Schema",
                             "examples": [
-                                2
+                                2, "500m"
                             ]
                         },
                         "memory": {
@@ -294,17 +287,15 @@
                     "type": "object",
                     "default": {},
                     "title": "The requests Schema",
-                    "required": [
-                        "cpu",
-                        "memory"
-                    ],
                     "properties": {
                         "cpu": {
-                            "type": "integer",
-                            "default": 0,
+                            "type": [
+                                "string",
+                                "integer"
+                              ],
                             "title": "The cpu Schema",
                             "examples": [
-                                2
+                                2, "500m"
                             ]
                         },
                         "memory": {
@@ -443,67 +434,6 @@
                 "name": ""
             }]
         },
-        "autoscaling": {
-            "type": "object",
-            "default": {},
-            "title": "The autoscaling Schema",
-            "required": [
-                "enabled",
-                "minReplicas",
-                "maxReplicas",
-                "targetCPUUtilizationPercentage",
-                "targetMemoryUtilizationPercentage"
-            ],
-            "properties": {
-                "enabled": {
-                    "type": "boolean",
-                    "default": false,
-                    "title": "The enabled Schema",
-                    "examples": [
-                        false
-                    ]
-                },
-                "minReplicas": {
-                    "type": "integer",
-                    "default": 0,
-                    "title": "The minReplicas Schema",
-                    "examples": [
-                        1
-                    ]
-                },
-                "maxReplicas": {
-                    "type": "integer",
-                    "default": 0,
-                    "title": "The maxReplicas Schema",
-                    "examples": [
-                        6
-                    ]
-                },
-                "targetCPUUtilizationPercentage": {
-                    "type": "integer",
-                    "default": 0,
-                    "title": "The targetCPUUtilizationPercentage Schema",
-                    "examples": [
-                        95
-                    ]
-                },
-                "targetMemoryUtilizationPercentage": {
-                    "type": "integer",
-                    "default": 0,
-                    "title": "The targetMemoryUtilizationPercentage Schema",
-                    "examples": [
-                        95
-                    ]
-                }
-            },
-            "examples": [{
-                "enabled": false,
-                "minReplicas": 1,
-                "maxReplicas": 6,
-                "targetCPUUtilizationPercentage": 95,
-                "targetMemoryUtilizationPercentage": 95
-            }]
-        },
         "terminationGracePeriodSeconds": {
             "type": "integer",
             "default": 0,
@@ -601,8 +531,7 @@
             "default": {},
             "title": "The podDisruptionBudget Schema",
             "required": [
-                "enabled",
-                "minAvailable"
+                "enabled"
             ],
             "properties": {
                 "enabled": {
@@ -614,11 +543,17 @@
                     ]
                 },
                 "minAvailable": {
-                    "type": "integer",
-                    "default": 0,
+                    "type": ["integer", "string"],
                     "title": "The minAvailable Schema",
                     "examples": [
-                        1
+                        1, "25%"
+                    ]
+                },
+                "maxUnavailable": {
+                    "type": ["integer", "string"],
+                    "title": "The maxUnavailable Schema",
+                    "examples": [
+                        1, "25%"
                     ]
                 }
             },
@@ -676,13 +611,6 @@
         "serviceAccount": {
             "create": true,
             "name": ""
-        },
-        "autoscaling": {
-            "enabled": false,
-            "minReplicas": 1,
-            "maxReplicas": 6,
-            "targetCPUUtilizationPercentage": 95,
-            "targetMemoryUtilizationPercentage": 95
         },
         "terminationGracePeriodSeconds": 10,
         "env": {},

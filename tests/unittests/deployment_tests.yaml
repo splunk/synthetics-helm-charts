@@ -1,0 +1,208 @@
+suite: Test Deployment
+templates:
+  - templates/deployment.yaml
+tests:
+  - it: should render deployment with correct metadata
+    asserts:
+    - isKind:
+        of: Deployment
+    - matchRegex:
+        path: metadata.name
+        pattern: ".*splunk-synthetics-runner$"
+  - it: should render deployment with security context when traffic shaping is enabled
+    set:
+      sythenetics.enableNetworkShaping: true
+    asserts:
+    - equal:
+        path: spec.template.spec.containers[0].securityContext
+        value:
+          capabilities:
+            add:
+              - NET_ADMIN
+          allowPrivilegeEscalation: true
+  - it: should render deployment when traffic shaping is disabled
+    set:
+      synthetics.enableNetworkShaping: false
+    asserts:
+    - equal:
+        path: spec.template.spec.containers[0].securityContext
+        value: {}
+    - contains:
+        path: spec.template.spec.containers[0].env
+        content:
+          name: DISABLE_NETWORK_SHAPING
+          value: "true"
+        any: true
+  - it: should render deployment with correct log level
+    set:
+      synthetics.logLevel: debug
+    asserts:
+    - contains:
+        path: spec.template.spec.containers[0].env
+        content:
+          name: LOG_LEVEL
+          value: DEBUG
+        any: true
+  - it: should render deployment with correct selectors and replicas
+    set:
+      replicaCount: 10
+      commonLabels:
+        key1: value1
+    asserts:
+    - equal:
+        path: spec.replicas
+        value: 10
+    - equal:
+        path: spec.selector.matchLabels
+        value:
+          app.kubernetes.io/name: splunk-synthetics-runner
+          app.kubernetes.io/instance: RELEASE-NAME
+          key1: value1
+  - it: should render deployment with correct pod labels and annotations
+    set:
+      commonLabels:
+        key1: value1
+      podLabels:
+        key2: value2
+      podAnnotations:
+        key3: value3
+    asserts:
+    - equal:
+        path: spec.template.metadata.labels.key1
+        value: value1
+    - equal:
+        path: spec.template.metadata.labels.key2
+        value: value2
+    - equal:
+        path: spec.template.metadata.annotations
+        value:
+          key3: value3
+  - it: should render deployment with correct container image
+    set:
+      image:
+        tag: 1.0.0
+    asserts:
+    - equal:
+        path: spec.template.spec.containers[0].image
+        value: quay.io/signalfx/splunk-synthetics-runner:1.0.0
+  - it: should render deployment with correct container resources
+    set:
+      resources: &valResources
+        limits:
+          cpu: 1
+          memory: 4Gi
+        requests:
+          cpu: 500m
+          memory: 2Gi
+    asserts:
+    - equal:
+        path: spec.template.spec.containers[0].resources
+        value: *valResources
+  - it: should render deployment with correct strategy
+    set:
+      updateStrategy: &valStrategy
+        type: RollingUpdate
+        rollingUpdate:
+          maxSurge: 25%
+          maxUnavailable: 1
+    asserts:
+    - equal:
+        path: spec.strategy
+        value: *valStrategy
+  - it: should render deployment with nodeSelector, tolerations and affinity
+    set:
+      nodeSelector:
+        key: value
+      affinity: &valAffinity
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: key
+                    operator: In
+                    values:
+                      - value
+      tolerations: &valTolerations
+        - key: key
+          operator: Equal
+          value: value
+          effect: NoSchedule
+    asserts:
+    - equal:
+        path: spec.template.spec.tolerations
+        value: *valTolerations
+    - equal:
+        path: spec.template.spec.nodeSelector
+        value:
+          key: value
+    - equal:
+        path: spec.template.spec.affinity
+        value: *valAffinity
+  - it: should render deployment with other customizable configs
+    set:
+      imagePullSecrets:
+        - name: secret1
+      automountServiceAccountToken: true
+      dnsPolicy: ClusterFirst
+      dnsConfig: &valDnsConfig
+        nameservers:
+          - 192.0.2.1
+        searches:
+          - ns1.svc.cluster-domain.example
+      priorityClassName: high
+      podSecurityContext: &valPodSecurityContext
+        fsGroup: 2000
+      containerSecurityContext:
+        capabilities:
+          add:
+            - NET_RAW
+      hostAliases: &valHostAliases
+        - ip: "1.2.3.4"
+          hostnames:
+          - "private.domain.com"
+      volumes: &valVolumes
+        - name: app-volume
+          emptyDir:
+            sizeLimit: 500Mi
+      volumeMounts: &valVolumeMounts
+        - mountPath: /app/tmp
+          name: app-volume
+    asserts:
+    - equal:
+        path: spec.template.spec.imagePullSecrets
+        value:
+          - name: secret1
+    - equal:
+        path: spec.template.spec.serviceAccountName
+        value: RELEASE-NAME-splunk-synthetics-runner
+    - equal:
+        path: spec.template.spec.automountServiceAccountToken
+        value: true
+    - equal:
+        path: spec.template.spec.dnsPolicy
+        value: ClusterFirst
+    - equal:
+        path: spec.template.spec.dnsConfig
+        value: *valDnsConfig
+    - equal:
+        path: spec.template.spec.priorityClassName
+        value: high
+    - equal:
+        path: spec.template.spec.securityContext
+        value: *valPodSecurityContext
+    - equal:
+        path: spec.template.spec.containers[0].securityContext
+        value:
+          capabilities:
+            add:
+              - NET_RAW
+              - NET_ADMIN
+    - equal:
+        path: spec.template.spec.hostAliases
+        value: *valHostAliases
+    - equal:
+        path: spec.template.spec.volumes
+        value: *valVolumes
+    - equal:
+        path: spec.template.spec.containers[0].volumeMounts
+        value: *valVolumeMounts

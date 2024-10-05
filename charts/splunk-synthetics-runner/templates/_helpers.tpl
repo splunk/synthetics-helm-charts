@@ -101,7 +101,33 @@ Render security context
 Render names compliant with DNS label standard as defined in RFC 1123
 */}}
 {{- define "cleanupNames" -}}
-  {{- $name := regexReplaceAll "\\W+" . "-" | lower -}}
+  {{- $name := regexReplaceAll "[^A-Za-z0-9\\-]" . "-" | lower -}}
   {{- $name = regexReplaceAll "^-+|-+$" $name "" | trunc 63 | trimSuffix "-" -}}
   {{- $name -}}
+{{- end -}}
+
+
+{{/*
+Render pod annotations.
+Checksums are calculated for secret and additionalCaCerts if they exist. This
+checksum is further used to trigger a rolling update when the secret/configmap
+changes. The checksum is stored in the pod annotation `checksum/config`.
+*/}}
+{{- define "splunk-synthetics-runner.podAnnotations" -}}
+{{- $checksums := list -}}
+{{- if and .Values.synthetics.secret.create .Values.synthetics.token -}}
+{{- $checksums = append $checksums (include (print .Template.BasePath "/secret.yaml") . | sha256sum) }}
+{{- end -}}
+{{- if .Values.synthetics.additionalCaCerts -}}
+{{- $checksums = append $checksums (include (print .Template.BasePath "/configmap-ca.yaml" ) . | sha256sum) }}
+{{- end -}}
+{{- if or $checksums .Values.podAnnotations -}}
+annotations:
+{{- if $checksums  }}
+  checksum/config: {{ (join "" $checksums) | sha256sum }}
+{{- end -}}
+{{- if .Values.podAnnotations -}}
+{{- toYaml .Values.podAnnotations | nindent 2 }}
+{{- end -}}
+{{- end -}}
 {{- end -}}

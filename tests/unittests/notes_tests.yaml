@@ -1,0 +1,29 @@
+suite: Test Notes file
+templates:
+  - templates/NOTES.txt
+tests:
+  - it: should fail the notes file with invalid combination of token/secret variables
+    set:
+      synthetics.secret.create: false
+    asserts:
+      - failedTemplate:
+          errorPattern: "[ERROR]"
+  - it: should not fail the notes when token is provided
+    set:
+      synthetics.secret.create: true
+      synthetics.secret.runnerToken: "faketoken"
+    asserts:
+      - notFailedTemplate: {}
+  - it: should not fail the notes when custom secret name is provided
+    set:
+      synthetics.secret.create: false
+      synthetics.secret.name: "secretname"
+    asserts:
+      - notFailedTemplate: {}
+  - it: should not fail the notes when RUNNER_TOKEN is given as an env var
+    set:
+      env:
+        RUNNER_TOKEN: "faketoken"
+      synthetics.secret.create: false
+    asserts:
+      - notFailedTemplate: {}

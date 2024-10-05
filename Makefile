@@ -2,7 +2,6 @@
 # The general settings and variables for the project
 SHELL := /bin/bash
 
-# TODO: Move CHART_FILE_PATH and VALUES_FILE_PATH here, currently set in multiple places
 # The version of the chart
 VERSION := $(shell grep "^version:" charts/splunk-synthetics-runner/Chart.yaml | awk '{print $$2}')
 
@@ -15,7 +14,7 @@ lint: ## Lint the Helm chart with ct
 	ct lint --config=ct.yaml || exit 1
 
 .PHONY: pre-commit
-pre-commit: render ## Test the Helm chart with pre-commit
+pre-commit: ## Test the Helm chart with pre-commit
 	@echo "Checking the Helm chart with pre-commit..."
 	pre-commit run --all-files || exit 1
 
@@ -28,3 +27,7 @@ unittest: ## Run unittests on the Helm chart
 docs: ## Run unittests on the Helm chart
 	@echo "Update docs for helm chart..."
 	cd charts/splunk-synthetics-runner && helm-docs || exit 1
+
+.PHONY: install-tools
+install-tools: ## Install tools (macOS)
+	LOCALBIN=$(LOCALBIN) scripts/install-tools.sh || exit 1

@@ -1,6 +1,6 @@
 ## Splunk Synthetic Monitoring - Kubernetes Private Locations
 
-![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.16.7](https://img.shields.io/badge/AppVersion-0.16.7-informational?style=flat-square)
+![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.19.3](https://img.shields.io/badge/AppVersion-0.19.3-informational?style=flat-square)
 
 Helm chart to deploy [private location runners](https://docs.splunk.com/observability/en/synthetics/test-config/private-locations.html) for [Splunk Synthetic Monitoring](https://www.splunk.com/en_us/products/synthetic-monitoring.html).
 
@@ -19,12 +19,6 @@ $ helm install my-splunk-synthetics-runner release synthetics-helm-charts/splunk
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Inter-pod and node affinity/anti-affinity rules. |
 | automountServiceAccountToken | bool | `true` | Indicates whether a service account token should be automatically mounted to the runner pod. |
-| autoscaling | object | `{"enabled":false,"maxReplicas":6,"minReplicas":1,"targetCPUUtilizationPercentage":95,"targetMemoryUtilizationPercentage":95}` | Configuration for HPA |
-| autoscaling.enabled | bool | `false` | Enable HPA |
-| autoscaling.maxReplicas | int | `6` | Maximum replicas of runner |
-| autoscaling.minReplicas | int | `1` | Minimum replicas of runner |
-| autoscaling.targetCPUUtilizationPercentage | int | `95` | Target CPU utilization |
-| autoscaling.targetMemoryUtilizationPercentage | int | `95` | Target Memory utilization |
 | commonLabels | object | `{}` | Additional labels which will be included on all objects and as selectors. |
 | containerSecurityContext | object | `{}` | Container security context for runner container. |
 | dnsConfig | object | `{}` | Specify additional DNS parameters for the runner pods. |
@@ -55,10 +49,10 @@ $ helm install my-splunk-synthetics-runner release synthetics-helm-charts/splunk
 | serviceAccount.create | bool | `true` | If true, service account will be created. |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set, the release's fullname will be used when create is true. Set this variable to add user created service account to pod. |
 | synthetics | object | `{"additionalCaCerts":{},"enableNetworkShaping":true,"logLevel":"info","secret":{"create":false,"name":"","runnerToken":""}}` | Splunk Synthetics Runner configurations |
-| synthetics.additionalCaCerts | object | `{}` | Add custom CA certs to use in API/HTTP tests. Requires privilege escalation. |
+| synthetics.additionalCaCerts | object | `{}` | Add custom CA certs (should be in PEM format) to use in API/HTTP tests. Requires privilege escalation in an init container which adds these certs to the runner's system cacerts. |
 | synthetics.enableNetworkShaping | bool | `true` | Enable netwrok shapping capabilities which allows runner to simulate different device's throughputs. Needs privilege escalation and CAP_NET_ADMIN. |
 | synthetics.logLevel | string | `"info"` | logLevel is to set log level of the Splunk Synthetics runner. Available values are: debug, info, warn, error |
-| synthetics.secret | object | `{"create":false,"name":"","runnerToken":""}` | Private location token configuration. Rotating the runner token requires an explicit rollout/restart of the deployment. |
+| synthetics.secret | object | `{"create":false,"name":"","runnerToken":""}` | Private location token configuration. |
 | synthetics.secret.create | bool | `false` | Option for creating a new secret or using an existing one. When true, a new kubernetes secret will be created by the chart that will contain value from runnerToken. When false, the user must set secret.name to the name of the k8s secret the user created with the runner's token. |
 | synthetics.secret.name | string | `""` | The name of the secret created by chart (if name is empty the default name is used) or the name of a secret that the user created. If secret is created outside of the helm chart, make sure the key for token is 'runner_token' in the secret. The chart references this key when passing token as env variable. |
 | synthetics.secret.runnerToken | string | `""` | Used when sythentics.secret.create=true. The runner's token available in Splunk Observability when Private Location was created. |

@@ -2,8 +2,19 @@ suite: Test ConfigMap
 templates:
   - templates/configmap-ca.yaml
   - templates/deployment.yaml
-values:
-  - ./values/configmap-ca_tests.yaml
+set:
+  synthetics:
+    additionalCaCerts:
+      customer_test.com.cert: |
+        -----BEGIN CERTIFICATE-----
+        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7
+        -----END CERTIFICATE-----
+      another.test.com.crt: |
+        -----BEGIN CERTIFICATE-----
+        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA8
+        -----END CERTIFICATE-----
+  podAnnotations:
+    key1: value1
 tests:
   - it: should create a ConfigMap with the correct name
     templates:
@@ -19,56 +30,98 @@ tests:
       - templates/configmap-ca.yaml
     asserts:
       - equal:
-          path: data["customer.test.com.cert"]
+          path: data["customer_test.com.cert"]
           value: |
             -----BEGIN CERTIFICATE-----
             MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7
             -----END CERTIFICATE-----
       - equal:
-          path: data["another.test.com.cert"]
-          value: |-
+          path: data["another.test.com.crt"]
+          value: |
             -----BEGIN CERTIFICATE-----
             MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA8
             -----END CERTIFICATE-----
-  - it: should add correct volumeMounts to deployment
+  - it: should add initContainer to pod spec
     templates:
       - templates/deployment.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].name
+          value: update-ca-certificates
+  - it: should add correct volumeMounts to initContainer, should not add extra volumeMounts to init containers
+    templates:
+      - templates/deployment.yaml
+    set:
+      volumeMounts:
+        - mountPath: /app/tmp
+          name: app-volume
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].volumeMounts
+          value:
+            - name: another-test-com-crt
+              mountPath: /usr/local/share/ca-certificates/another.test.com.crt
+              subPath: another.test.com.crt
+              readOnly: false
+            - name: customer-test-com-cert
+              mountPath: /usr/local/share/ca-certificates/customer_test.com.crt
+              subPath: customer_test.com.crt
+              readOnly: false
+            - name: cacerts
+              mountPath: /cacerts/
+              readOnly: false
+  - it: should add correct volumeMounts to containers
+    templates:
+      - templates/deployment.yaml
+    set:
+      volumeMounts:
+        - mountPath: /app/tmp
+          name: app-volume
     asserts:
       - equal:
           path: spec.template.spec.containers[0].volumeMounts
           value:
-            - name: another-test-com-cert
-              mountPath: /usr/local/share/ca-certificates/another.test.com.cert
-              subPath: another.test.com.cert
+            - name: cacerts
+              mountPath: /etc/ssl/certs
               readOnly: false
-            - name: customer-test-com-cert
-              mountPath: /usr/local/share/ca-certificates/customer.test.com.cert
-              subPath: customer.test.com.cert
-              readOnly: false
+            - mountPath: /app/tmp
+              name: app-volume
   - it: should add correct volumes to deployment
     templates:
       - templates/deployment.yaml
+    set:
+      volumes:
+        - name: app-volume
+          emptyDir:
+            sizeLimit: 500Mi
     asserts:
       - equal:
           path: spec.template.spec.volumes
           value:
-            - name: another-test-com-cert
+            - name: another-test-com-crt
               configMap:
                 name: RELEASE-NAME-splunk-synthetics-runner
                 items:
-                  - key: another.test.com.cert
-                    path: another.test.com.cert
+                  - key: another.test.com.crt
+                    path: another.test.com.crt
             - name: customer-test-com-cert
               configMap:
                 name: RELEASE-NAME-splunk-synthetics-runner
                 items:
-                  - key: customer.test.com.cert
-                    path: customer.test.com.cert
-  - it: should add cmd/args to pod spec
+                  - key: customer_test.com.cert
+                    path: customer_test.com.crt
+            - name: cacerts
+              emptyDir: {}
+            - name: app-volume
+              emptyDir:
+                sizeLimit: 500Mi
+  - it: should add checksum and any additional annotation
     templates:
       - templates/deployment.yaml
     asserts:
-      - exists:
-        path: spec.template.spec.containers[0].args
-      - exists:
-        path: spec.template.spec.containers[0].command
+    - matchRegex:
+        path: spec.template.metadata.annotations["checksum/config"]
+        pattern: "^[A-Fa-f0-9]{64}$"
+    - equal:
+        path: spec.template.metadata.annotations.key1
+        value: value1

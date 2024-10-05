@@ -54,11 +54,13 @@ synthetics:
   # Available values are: debug, info, warn, error
   logLevel: info
 
-  # -- Add custom CA certs to use in API/HTTP tests. Requires privilege escalation.
+  # -- Add custom CA certs (should be in PEM format) to use in API/HTTP tests.
+  # Requires privilege escalation in an init container which adds these certs
+  # to the runner's system cacerts.
   additionalCaCerts: {}
 
+
   # -- Private location token configuration.
-  # Rotating the runner token requires an explicit rollout/restart of the deployment.
   secret:
     # -- The name of the secret created by chart (if name is empty the default name is used)
     # or the name of a secret that the user created.
@@ -112,19 +114,6 @@ serviceAccount:
   name: ""
   # -- Annotations to add to service account
   annotations: {}
-
-# -- Configuration for HPA
-autoscaling:
-  # -- Enable HPA
-  enabled: false
-  # -- Minimum replicas of runner
-  minReplicas: 1
-  # -- Maximum replicas of runner
-  maxReplicas: 6
-  # -- Target CPU utilization
-  targetCPUUtilizationPercentage: 95
-  # -- Target Memory utilization
-  targetMemoryUtilizationPercentage: 95
 
 # -- Duration in seconds the pod needs to terminate gracefully.
 terminationGracePeriodSeconds: 10

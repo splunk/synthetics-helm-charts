@@ -1,0 +1,37 @@
+suite: Test PodDisruptionBudget
+templates:
+  - templates/pdb.yaml
+tests:
+  - it: should render PodDisruptionBudget with correct metadata and spec
+    set:
+      commonLabels:
+        key1: value1
+      podDisruptionBudget:
+        enabled: true
+        minAvailable: 1
+    asserts:
+      - isKind:
+          of: PodDisruptionBudget
+      - matchRegex:
+          path: metadata.name
+          pattern: ".*splunk-synthetics-runner$"
+      - equal:
+          path: spec.minAvailable
+          value: 1
+      - equal:
+          path: spec.selector.matchLabels
+          value:
+            app.kubernetes.io/name: splunk-synthetics-runner
+            app.kubernetes.io/instance: RELEASE-NAME
+            key1: value1
+      - equal:
+          path: metadata.labels.key1
+          value: value1
+  - it: should not render PodDisruptionBudget
+    set:
+      podDisruptionBudget:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: templates/pdb.yaml

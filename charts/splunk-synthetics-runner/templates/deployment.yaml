@@ -5,9 +5,7 @@ metadata:
   labels:
     {{- include "splunk-synthetics-runner.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   {{- if .Values.updateStrategy }}
   strategy:
     {{- toYaml .Values.updateStrategy | nindent 4 }}
@@ -17,18 +15,17 @@ spec:
       {{- include "splunk-synthetics-runner.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
         {{- include "splunk-synthetics-runner.podLabels" . | nindent 8 }}
+      {{- include "splunk-synthetics-runner.podAnnotations" . | nindent 6 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if or .Values.serviceAccount.create .Values.serviceAccount.name }}
       serviceAccountName: {{ include "splunk-synthetics-runner.serviceAccountName" . }}
+      {{- end}}
       {{- if .Values.automountServiceAccountToken }}
       automountServiceAccountToken: {{ .Values.automountServiceAccountToken }}
       {{- end }}
@@ -50,12 +47,31 @@ spec:
       hostAliases:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.synthetics.additionalCaCerts }}
+      initContainers:
+        - name: update-ca-certificates
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/usr/bin/sh", "-c", "--"]
+          args: ["sudo update-ca-certificates && cp -r /etc/ssl/certs/* /cacerts/"]
+          securityContext:
+            allowPrivilegeEscalation: true
+          volumeMounts:
+          {{- if .Values.synthetics.additionalCaCerts }}
+            {{- range $cert := keys .Values.synthetics.additionalCaCerts | sortAlpha }}
+            {{- $crtFile := regexReplaceAll "^(.*)\\.(\\w+)$" $cert "${1}.crt" }}
+            - name: {{ include "cleanupNames" $cert }}
+              mountPath: {{ printf "/usr/local/share/ca-certificates/%s" $crtFile }}
+              subPath: {{ $crtFile }}
+              readOnly: false
+            {{- end }}
+          {{- end }}
+            - name: cacerts
+              mountPath: /cacerts/
+              readOnly: false
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          {{- if .Values.synthetics.additionalCaCerts }}
-          command: ["/usr/bin/sh", "-c", "--"]
-          args: ["sudo update-ca-certificates; exec /usr/bin/tini -s -- bundle exec bin/start_runner"]
-          {{- end }}
           env:
           {{- if not .Values.synthetics.enableNetworkShaping }}
             - name: DISABLE_NETWORK_SHAPING
@@ -63,11 +79,13 @@ spec:
           {{- end }}
             - name: LOG_LEVEL
               value: {{ .Values.synthetics.logLevel | upper }}
+            {{- if or .Values.synthetics.secret.create .Values.synthetics.secret.name }}
             - name: RUNNER_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: {{ include "splunk-synthetics-runner.secretName" . }}
                   key: runner_token
+            {{- end }}
           {{- range $key, $value := .Values.env }}
             - name: {{ $key }}
               value: {{ $value | quote }}
@@ -92,12 +110,9 @@ spec:
           {{- if or .Values.synthetics.additionalCaCerts .Values.volumeMounts }}
           volumeMounts:
           {{- if .Values.synthetics.additionalCaCerts }}
-            {{- range $cert := keys .Values.synthetics.additionalCaCerts | sortAlpha }}
-            - name: {{ include "cleanupNames" $cert }}
-              mountPath: {{ printf "/usr/local/share/ca-certificates/%s" $cert }}
-              subPath: {{ $cert }}
+            - name: cacerts
+              mountPath: /etc/ssl/certs
               readOnly: false
-            {{- end }}
           {{- end }}
           {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
@@ -108,13 +123,16 @@ spec:
       volumes:
       {{- if .Values.synthetics.additionalCaCerts }}
         {{- range $cert := keys .Values.synthetics.additionalCaCerts | sortAlpha }}
+        {{- $crtFile := regexReplaceAll "^(.*)\\.(\\w+)$" $cert "${1}.crt" }}
         - name: {{ include "cleanupNames" $cert }}
           configMap:
             name: {{ include "splunk-synthetics-runner.fullname" $ }}
             items:
               - key: {{ $cert }}
-                path: {{ $cert }}
+                path: {{ $crtFile }}
         {{- end }}
+        - name: cacerts
+          emptyDir: {}
       {{- end }}
       {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}

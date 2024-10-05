@@ -1,0 +1,4 @@
+synthetics:
+  secret:
+    create: true
+    runnerToken: "faketoken"
