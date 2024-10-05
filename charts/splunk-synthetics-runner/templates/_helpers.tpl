@@ -115,7 +115,7 @@ changes. The checksum is stored in the pod annotation `checksum/config`.
 */}}
 {{- define "splunk-synthetics-runner.podAnnotations" -}}
 {{- $checksums := list -}}
-{{- if and .Values.synthetics.secret.create .Values.synthetics.token -}}
+{{- if and .Values.synthetics.secret.create .Values.synthetics.secret.runnerToken -}}
 {{- $checksums = append $checksums (include (print .Template.BasePath "/secret.yaml") . | sha256sum) }}
 {{- end -}}
 {{- if .Values.synthetics.additionalCaCerts -}}

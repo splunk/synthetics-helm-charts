@@ -44,7 +44,7 @@ jobs:
         run: |
           ./scripts/helm-docs.sh
           if [[ $(git diff --stat) != '' ]]; then
-            echo -e '\033[0;31mChart's README is outdated! Please run "make docs".\033[0m ❌'
+            echo -e '\033[0;31mChart README is outdated! Please run "make docs".\033[0m ❌'
             git diff --color
             exit 1
           else

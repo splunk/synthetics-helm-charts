@@ -21,12 +21,12 @@ pre-commit: ## Test the Helm chart with pre-commit
 .PHONY: unittest
 unittest: ## Run unittests on the Helm chart
 	@echo "Running unit tests on helm chart..."
-	cd charts/splunk-synthetics-runner && helm unittest --strict -f "../../tests/unittests/*.yaml" . || exit 1
+	helm unittest --strict -f "../../tests/unittests/*.yaml" charts/splunk-synthetics-runner || exit 1
 
 .PHONY: docs
 docs: ## Run unittests on the Helm chart
 	@echo "Update docs for helm chart..."
-	cd charts/splunk-synthetics-runner && helm-docs || exit 1
+	helm-docs --chart-search-root=charts/ || exit 1
 
 .PHONY: install-tools
 install-tools: ## Install tools (macOS)
