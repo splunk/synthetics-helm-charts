@@ -42,6 +42,7 @@ jobs:
       - name: Run helm-docs
         id: helm-docs
         run: |
+          helm plugin install https://github.com/helm-unittest/helm-unittest.git
           make docs
           if [[ $(git diff --stat) != '' ]]; then
             echo -e '\033[0;31mREADME outdated! Please run "make docs".\033[0m ❌'
