@@ -108,7 +108,7 @@ Render names compliant with DNS label standard as defined in RFC 1123
 
 
 {{/*
-Render pod annotations.
+Render pod annotations. TEST
 Checksums are calculated for secret and additionalCaCerts if they exist. This
 checksum is further used to trigger a rolling update when the secret/configmap
 changes. The checksum is stored in the pod annotation `checksum/config`.
