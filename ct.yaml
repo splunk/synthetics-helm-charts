@@ -3,6 +3,6 @@ remote: origin
 target-branch: main
 chart-dirs:
   - charts
-helm-extra-args: '--values=tests/ci_values.yaml --timeout=600s'
+helm-extra-args: '-f=tests/ci_values.yaml --timeout=600s'
 helm-lint-extra-args: '--values=tests/ci_values.yaml'
 check-version-increment: false
