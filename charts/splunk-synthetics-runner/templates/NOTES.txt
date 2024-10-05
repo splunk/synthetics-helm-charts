@@ -1,5 +1,5 @@
 {{/* Throws an error when the token is not provided. Not an exhaustive check of
-all the different ways a user could add an env variable to container,
+all the different ways a user could add the runner token in the container,
 so might need to be removed later if requested by users.
 If none of the below checks pass, we throw an error -
 1. Check if token var has value and secret creation is enabled
