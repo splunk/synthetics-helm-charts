@@ -4,6 +4,8 @@ on:
   pull_request:
     branches-ignore:
       - gh-pages
+  push:
+    branches: [ main ]
 
 jobs:
   lint-test:
