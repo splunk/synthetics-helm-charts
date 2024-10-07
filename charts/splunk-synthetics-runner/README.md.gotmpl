@@ -9,8 +9,28 @@ Helm chart to deploy [private location runners](https://docs.splunk.com/observab
 To install the chart with the release name `my-splunk-synthetics-runner`:
 
 ```console
-$ helm repo add synthetics-helm-charts https://splunk.github.io/synthetics-helm-charts/
-$ helm install my-splunk-synthetics-runner release synthetics-helm-charts/splunk-synthetics-runner
+helm repo add synthetics-helm-charts https://splunk.github.io/synthetics-helm-charts/
+helm install my-splunk-synthetics-runner synthetics-helm-charts/splunk-synthetics-runner --set=synthetics.secret.runnerToken=<runner>
+```
+
+### Updating the Chart
+
+Get the latest version of the chart by running the following command:
+
+```console
+helm repo update synthetics-helm-charts
+```
+
+Users can also check the available versions of the chart by running the following command:
+
+```console
+helm search repo synthetics-helm-charts/splunk-synthetics-runner --versions
+```
+
+To upgrade an installed release of the Splunk Synthetics runner with the  name `my-splunk-synthetics-runner`, run the following command:
+
+```console
+helm upgrade my-splunk-synthetics-runner synthetics-helm-charts/splunk-synthetics-runner --set=synthetics.secret.runnerToken=<runner>
 ```
 
 {{ template "chart.requirementsSection" . }}
