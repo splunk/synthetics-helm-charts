@@ -60,7 +60,7 @@ spec:
           {{- if .Values.synthetics.additionalCaCerts }}
             {{- range $cert := keys .Values.synthetics.additionalCaCerts | sortAlpha }}
             {{- $crtFile := regexReplaceAll "^(.*)\\.(\\w+)$" $cert "${1}.crt" }}
-            - name: {{ include "cleanupNames" $cert }}
+            - name: {{ include "splunk-synthetics-runner.cleanupNames" $cert }}
               mountPath: {{ printf "/usr/local/share/ca-certificates/%s" $crtFile }}
               subPath: {{ $crtFile }}
               readOnly: false
@@ -124,7 +124,7 @@ spec:
       {{- if .Values.synthetics.additionalCaCerts }}
         {{- range $cert := keys .Values.synthetics.additionalCaCerts | sortAlpha }}
         {{- $crtFile := regexReplaceAll "^(.*)\\.(\\w+)$" $cert "${1}.crt" }}
-        - name: {{ include "cleanupNames" $cert }}
+        - name: {{ include "splunk-synthetics-runner.cleanupNames" $cert }}
           configMap:
             name: {{ include "splunk-synthetics-runner.fullname" $ }}
             items:
