@@ -100,7 +100,7 @@ Render security context
 {{/*
 Render names compliant with DNS label standard as defined in RFC 1123
 */}}
-{{- define "cleanupNames" -}}
+{{- define "splunk-synthetics-runner.cleanupNames" -}}
   {{- $name := regexReplaceAll "[^A-Za-z0-9\\-]" . "-" | lower -}}
   {{- $name = regexReplaceAll "^-+|-+$" $name "" | trunc 63 | trimSuffix "-" -}}
   {{- $name -}}

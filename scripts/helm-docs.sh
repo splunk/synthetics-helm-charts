@@ -8,4 +8,5 @@ echo "Running helm-docs"
 docker run \
     -v "$REPO_ROOT:/helm-docs" \
     -u $(id -u) \
-    jnorwood/helm-docs:v1.14.2
+    jnorwood/helm-docs:v1.14.2 \
+    --chart-search-root="charts/"
