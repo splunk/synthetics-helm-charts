@@ -62,4 +62,4 @@ jobs:
 
       # pod will error due to invalid token for now
       - name: Run chart-testing (install)
-        run: ct install --config=ct.yaml --helm-extra-args="--wait=false"
+        run: ct install --config=ct.yaml
