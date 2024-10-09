@@ -1,4 +1,4 @@
-name: CI Build Test
+name: Lint and Test
 
 on:
   pull_request:
@@ -41,7 +41,7 @@ jobs:
       - name: Run helm-docs
         id: helm-docs
         run: |
-          ./scripts/helm-docs.sh
+          make docker-docs
           if [[ $(git diff --stat) != '' ]]; then
             echo -e '\033[0;31mChart README is outdated! Please run "make docs".\033[0m ❌'
             git diff --color
@@ -52,7 +52,8 @@ jobs:
 
       - name: Run helm unit tests
         run: |
-          helm plugin install https://github.com/helm-unittest/helm-unittest
+          echo "Installing latest version of helm unittest plugin..."
+          helm plugin install https://github.com/helm-unittest/helm-unittest >/dev/null 2>/dev/null
           make unittest
 
       - name: Create kind cluster
