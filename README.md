@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/splunk/synthetics-helm-charts/actions/workflows/test.yaml?query=branch%3Amain">
-    <img alt="Build Status" src="https://github.com/splunk/synthetics-helm-charts/actions/workflows/test.yaml?branch=main&style=for-the-badge">
+    <img alt="Build Status" src="https://img.shields.io/github/actions/workflow/status/splunk/synthetics-helm-charts/test.yaml?branch=main&style=for-the-badge">
   </a>
   <a href="https://github.com/splunk/synthetics-helm-charts/releases">
     <img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/splunk/synthetics-helm-charts?include_prereleases&style=for-the-badge">
