@@ -10,7 +10,7 @@ To install the chart with the release name `my-splunk-synthetics-runner`:
 
 ```console
 helm repo add synthetics-helm-charts https://splunk.github.io/synthetics-helm-charts/
-helm install my-splunk-synthetics-runner synthetics-helm-charts/splunk-synthetics-runner --set=synthetics.secret.runnerToken=<runner>
+helm install my-splunk-synthetics-runner synthetics-helm-charts/splunk-synthetics-runner --set=synthetics.secret.create=true,synthetics.secret.runnerToken=<TOKEN>
 ```
 
 ### Updating the Chart
@@ -30,7 +30,27 @@ helm search repo synthetics-helm-charts/splunk-synthetics-runner --versions
 To upgrade an installed release of the Splunk Synthetics runner with the  name `my-splunk-synthetics-runner`, run the following command:
 
 ```console
-helm upgrade my-splunk-synthetics-runner synthetics-helm-charts/splunk-synthetics-runner --set=synthetics.secret.runnerToken=<runner>
+helm upgrade my-splunk-synthetics-runner synthetics-helm-charts/splunk-synthetics-runner --set=synthetics.secret.create=true,synthetics.secret.runnerToken=<TOKEN>
+```
+
+### Uninstalling the Chart
+
+To unistall a release of the Splunk Synthetics runner with the name `my-splunk-synthetics-runner`, run the following command:
+
+```console
+helm uninstall my-splunk-synthetics-runner
+```
+
+### Configuration
+
+Refer to the [values.yaml](values.yaml) file or the Values section below for the full run-down on configuration options and default values available.
+
+### Alternatives to Helm
+
+If you are not using Helm, you can generate the Kubernetes manifests from the helm chart and deploy with `kubectl`. To generate the Kubernetes manifests, run the following command:
+
+```console
+helm template my-splunk-synthetics-runner synthetics-helm-charts/splunk-synthetics-runner --set=synthetics.secret.create=true,synthetics.secret.runnerToken=<TOKEN> | kubectl apply -f -
 ```
 
 ## Values
