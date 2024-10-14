@@ -61,6 +61,8 @@ jobs:
         # Only build a kind cluster if there are chart changes to test.
         if: steps.list-changed.outputs.changed == 'true'
 
-      # pod will error due to invalid token for now
       - name: Run chart-testing (install)
-        run: ct install --config=ct.yaml
+        run: ct install --config=ct.yaml --helm-extra-set-args='--set=synthetics.secret.token=${{ secrets.RUNNER_TOKEN }}'
+
+      - name: Run chart-testing (upgrade)
+        run: ct install --config=ct.yaml --helm-extra-set-args='--set=synthetics.secret.token=${{ secrets.RUNNER_TOKEN }}' --upgrade
