@@ -47,7 +47,9 @@ Refer to the [values.yaml](values.yaml) file or the Values section below for the
 
 ### Alternatives to Helm
 
-If you are not using Helm, you can generate the Kubernetes manifests from the helm chart and deploy with `kubectl`. To generate the Kubernetes manifests, run the following command:
+If you are not using Helm, you can generate the Kubernetes manifests from the helm chart and deploy with `kubectl`.
+
+To generate the Kubernetes manifests and apply with kubectl, run the following command:
 
 ```console
 helm template my-splunk-synthetics-runner synthetics-helm-charts/splunk-synthetics-runner --set=synthetics.secret.create=true,synthetics.secret.runnerToken=<TOKEN> | kubectl apply -f -
