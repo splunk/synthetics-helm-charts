@@ -54,7 +54,7 @@ synthetics:
   # Available values are: debug, info, warn, error
   logLevel: info
 
-  # -- Add custom CA certs (should be in PEM format) to use in API/HTTP tests.
+  # -- Add custom CA certs (should be in PEM format) to use in Uptime tests.
   # Requires privilege escalation in an init container which adds these certs
   # to the runner's system cacerts.
   additionalCaCerts: {}

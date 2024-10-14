@@ -89,7 +89,7 @@ helm template my-splunk-synthetics-runner synthetics-helm-charts/splunk-syntheti
 | serviceAccount.create | bool | `true` | If true, service account will be created. |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set, the release's fullname will be used when create is true. Set this variable to add user created service account to pod. |
 | synthetics | object | `{"additionalCaCerts":{},"enableNetworkShaping":true,"logLevel":"info","secret":{"create":false,"name":"","runnerToken":""}}` | Splunk Synthetics Runner configurations |
-| synthetics.additionalCaCerts | object | `{}` | Add custom CA certs (should be in PEM format) to use in API/HTTP tests. Requires privilege escalation in an init container which adds these certs to the runner's system cacerts. |
+| synthetics.additionalCaCerts | object | `{}` | Add custom CA certs (should be in PEM format) to use in Uptime tests. Requires privilege escalation in an init container which adds these certs to the runner's system cacerts. |
 | synthetics.enableNetworkShaping | bool | `true` | Enable netwrok shapping capabilities which allows runner to simulate different device's throughputs. Needs privilege escalation and CAP_NET_ADMIN. |
 | synthetics.logLevel | string | `"info"` | logLevel is to set log level of the Splunk Synthetics runner. Available values are: debug, info, warn, error |
 | synthetics.secret | object | `{"create":false,"name":"","runnerToken":""}` | Private location token configuration. |
