@@ -13,13 +13,17 @@ on:
   workflow_dispatch:
     inputs:
       CHART_VERSION:
-        description: 'Optionally overrides the chart version in Chart.yaml.'
+        description: 'Optionally override the chart version in Chart.yaml.'
         required: false
         default: ''
       APP_VERSION:
-        description: 'Optionally overrides the app version in Chart.yaml.'
+        description: 'Optionally override the app version in Chart.yaml.'
         required: false
         default: ''
+      BRANCH_NAME:
+        description: 'Optionally override the branch name for PR.'
+        required: false
+        default: 'new-version-release'
 
 jobs:
   draft-release:
@@ -30,6 +34,7 @@ jobs:
     env:
       CHART_VERSION: ${{ github.event.inputs.CHART_VERSION }}
       APP_VERSION: ${{ github.event.inputs.APP_VERSION }}
+      BRANCH_NAME: new-version-release
     steps:
       - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.2.1
 
@@ -43,8 +48,9 @@ jobs:
           echo "NEEDS_PR=1" >> "$GITHUB_OUTPUT"
           git fetch origin
           # Directly check if the branch exists and has the same changes in the remote repository
-          if git ls-remote --heads origin new-version-release > /dev/null; then
-            if git diff --no-ext-diff --quiet origin/new-version-release -- charts; then
+          git ls-remote --exit-code --heads origin ${BRANCH_NAME} > /dev/null 2>&1
+          if [ $? -eq 0 ]; then
+            if git diff --no-ext-diff --quiet origin/${BRANCH_NAME} -- charts; then
               echo "NEEDS_PR=0" >> "$GITHUB_OUTPUT"
             fi
           fi
@@ -60,7 +66,7 @@ jobs:
             Description
             - Release chart version ${{ steps.prepare_release.outputs.NEW_CHART_VERSION }}
             - Update runner app version ${{ steps.prepare_release.outputs.NEW_APP_VERSION }}
-          branch: new-version-release
+          branch: ${{ env.BRANCH_NAME }}
           base: main
           delete-branch: true
           draft: always-true
