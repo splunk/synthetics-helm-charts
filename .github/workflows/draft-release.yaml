@@ -47,9 +47,11 @@ jobs:
         run: |
           echo "NEEDS_PR=1" >> "$GITHUB_OUTPUT"
           git fetch origin
+          set +e # change shell behavior from github's default
           # Directly check if the branch exists and has the same changes in the remote repository
           git ls-remote --exit-code --heads origin ${BRANCH_NAME} > /dev/null 2>&1
           if [ $? -eq 0 ]; then
+            set -e # revert to default behavior
             if git diff --no-ext-diff --quiet origin/${BRANCH_NAME} -- charts; then
               echo "NEEDS_PR=0" >> "$GITHUB_OUTPUT"
             fi
