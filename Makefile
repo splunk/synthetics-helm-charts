@@ -36,3 +36,8 @@ docs: ## Update chart docs
 .PHONY: install-tools
 install-tools: ## Install tools (macOS)
 	LOCALBIN=$(LOCALBIN) scripts/install-tools.sh || exit 1
+
+.PHONY: prepare-release
+prepare-release: ## Prepare new release if needed
+	@echo "Preparing release..."
+	./scripts/prepare-release.sh || exit 1

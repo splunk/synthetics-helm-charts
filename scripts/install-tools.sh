@@ -3,7 +3,6 @@
 # Notes:
 #   - Should be executed via the `make install-tools` command.
 #   - Supports macOS for installations via `brew install`
-# Include the base utility functions for setting and debugging variables
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Function to install a tool
@@ -68,7 +67,7 @@ install_helm_plugin() {
 }
 
 # install brew-based tools
-for tool in yamllint chart-testing helm kubectl pre-commit norwoodj/tap/helm-docs; do
+for tool in yq jq yamllint chart-testing helm kubectl pre-commit norwoodj/tap/helm-docs; do
   install "$tool" brew
 done
 
