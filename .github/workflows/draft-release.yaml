@@ -64,8 +64,8 @@ jobs:
         if: ${{ steps.prepare_release.outputs.NEEDS_UPDATE == 1 && steps.check_if_pr_open.outputs.NEEDS_PR == 1 }}
         uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
         with:
-          commit-message: Prepare release v${{ steps.prepare_release.outputs.NEW_CHART_VERSION }}
-          title: "chore: Prepare release v${{ steps.prepare_release.outputs.NEW_CHART_VERSION }}"
+          commit-message: Prepare chart release ${{ steps.prepare_release.outputs.NEW_CHART_VERSION }}
+          title: "chore: Prepare chart release ${{ steps.prepare_release.outputs.NEW_CHART_VERSION }}"
           body: |
             Description
             - Release chart version ${{ steps.prepare_release.outputs.NEW_CHART_VERSION }}
