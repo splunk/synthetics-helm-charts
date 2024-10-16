@@ -30,14 +30,14 @@ NEW_APP_VERSION=${APP_VERSION:-$LATEST_RUNNER_TAG}
 if [ "$CURRENT_APP_VERSION" == "$NEW_APP_VERSION" ]; then
   echo "Runner image tag is already up to date (appVersion $CURRENT_APP_VERSION)."
   if [[ -n "${GITHUB_ACTIONS-}" ]]; then
-    echo "NEEDS_UPDATE=0" >> "$GITHUB_ENV"
+    echo "NEEDS_UPDATE=0" >> "$GITHUB_OUTPUT"
   fi
   exit 0
 else
   echo "Runner image tag is not up to date. Current appVersion is $CURRENT_APP_VERSION and the new appVersion is $NEW_APP_VERSION."
   if [[ -n "${GITHUB_ACTIONS-}" ]]; then
-    echo "NEEDS_UPDATE=1" >> "$GITHUB_ENV"
-    echo "NEW_APP_VERSION=$NEW_APP_VERSION" >> "$GITHUB_ENV"
+    echo "NEEDS_UPDATE=1" >> "$GITHUB_OUTPUT"
+    echo "NEW_APP_VERSION=$NEW_APP_VERSION" >> "$GITHUB_OUTPUT"
   fi
 fi
 
@@ -52,5 +52,5 @@ echo "Updating the chart version to $NEW_CHART_VERSION"
 NEW_CHART_VERSION=${NEW_CHART_VERSION} yq eval -i '.version = strenv(NEW_CHART_VERSION)' ${CHART_YAML_PATH}
 
 if [[ -n "${GITHUB_ACTIONS-}" ]]; then
-  echo "NEW_CHART_VERSION=$NEW_CHART_VERSION" >> "$GITHUB_ENV"
+  echo "NEW_CHART_VERSION=$NEW_CHART_VERSION" >> "$GITHUB_OUTPUT"
 fi
