@@ -2,8 +2,8 @@ apiVersion: v2
 name: splunk-synthetics-runner
 description: Private location runners for Splunk Synthetic Monitoring
 type: application
-version: 0.0.3
-appVersion: "0.19.3"
+version: 1.0.0
+appVersion: "0.19.4"
 keywords:
   - Splunk
   - Observability
