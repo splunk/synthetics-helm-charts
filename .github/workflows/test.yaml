@@ -70,4 +70,4 @@ jobs:
         run: ct install --config=ct.yaml --helm-extra-set-args='--set=synthetics.secret.create=true,synthetics.secret.runnerToken=${{ secrets.RUNNER_TOKEN }}'
 
       - name: Run chart-testing (upgrade)
-        run: ct install --config=ct.yaml --helm-extra-set-args='--set=synthetics.secret.create=true,synthetics.secret.runnerToken=${{ secrets.RUNNER_TOKEN }}' --upgrade
+        run: ct install --config=ct.yaml --helm-extra-set-args='--set=resources.limits=null,resources.requests=null,synthetics.secret.create=true,synthetics.secret.runnerToken=${{ secrets.RUNNER_TOKEN }}' --upgrade
