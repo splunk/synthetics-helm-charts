@@ -62,7 +62,7 @@ jobs:
       - name: Open PR for Version Update
         id: open_pr
         if: ${{ steps.prepare_release.outputs.NEEDS_UPDATE == 1 && steps.check_if_pr_open.outputs.NEEDS_PR == 1 }}
-        uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
+        uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
         with:
           commit-message: Prepare chart release ${{ steps.prepare_release.outputs.NEW_CHART_VERSION }}
           title: "chore: Prepare chart release ${{ steps.prepare_release.outputs.NEW_CHART_VERSION }}"
