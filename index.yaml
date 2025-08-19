@@ -2,6 +2,23 @@ apiVersion: v1
 entries:
   splunk-synthetics-runner:
   - apiVersion: v2
+    appVersion: 0.30.5
+    created: "2025-08-19T03:03:51.772949249Z"
+    description: Private location runners for Splunk Synthetic Monitoring
+    digest: c0cacb1626bc1783b0d95ff51041a43188e7dd52a50532c693a58fdcea8aa5b7
+    keywords:
+    - Splunk
+    - Observability
+    - Synthetic Monitoring
+    - Private Location
+    maintainers:
+    - name: Splunk
+    name: splunk-synthetics-runner
+    type: application
+    urls:
+    - https://github.com/splunk/synthetics-helm-charts/releases/download/splunk-synthetics-runner-0.0.12/splunk-synthetics-runner-0.0.12.tgz
+    version: 0.0.12
+  - apiVersion: v2
     appVersion: 0.25.2
     created: "2025-05-29T19:51:22.12149619Z"
     description: Private location runners for Splunk Synthetic Monitoring
@@ -181,4 +198,4 @@ entries:
     urls:
     - https://github.com/splunk/synthetics-helm-charts/releases/download/splunk-synthetics-runner-0.0.1/splunk-synthetics-runner-0.0.1.tgz
     version: 0.0.1
-generated: "2025-05-29T19:51:22.121541265Z"
+generated: "2025-08-19T03:03:51.772998642Z"
