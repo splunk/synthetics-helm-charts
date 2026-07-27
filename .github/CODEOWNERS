@@ -3,4 +3,4 @@
 # below groups will be requested for
 # review when someone opens a pull request.
 
-* @splunk/o11y-synthetics-admins @splunk/o11y-synthetics-approvers @splunk/o11y-synthetics-maintainers
+* @splunk/o11y-synthetics-approvers @splunk/o11y-synthetics-maintainers
