@@ -1,6 +1,6 @@
 ## Splunk Synthetic Monitoring - Kubernetes Private Locations
 
-![Version: 0.0.15](https://img.shields.io/badge/Version-0.0.15-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.6.1](https://img.shields.io/badge/AppVersion-1.6.1-informational?style=flat-square)
+![Version: 0.0.16](https://img.shields.io/badge/Version-0.0.16-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.38.3](https://img.shields.io/badge/AppVersion-1.38.3-informational?style=flat-square)
 
 Helm chart to deploy [private location runners](https://docs.splunk.com/observability/en/synthetics/test-config/private-locations.html) for [Splunk Synthetic Monitoring](https://www.splunk.com/en_us/products/synthetic-monitoring.html).
 
